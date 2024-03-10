@@ -1,5 +1,9 @@
 package com.disney.studios;
 
+import com.disney.studios.entity.DogBreed;
+import com.disney.studios.entity.DogPicture;
+import com.disney.studios.repository.DogBreedRepository;
+import com.disney.studios.repository.DogPictureRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +39,12 @@ public class PetLoader implements InitializingBean {
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    DogBreedRepository dogBreedRepository;
+
+    @Autowired
+    DogPictureRepository dogPictureRepository;
+
     /**
      * Load the different breeds into the data source after
      * the application is ready.
@@ -61,9 +71,16 @@ public class PetLoader implements InitializingBean {
             String line;
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
-                /* TODO: Create appropriate objects and save them to
-                 *       the datasource.
-                 */
+                DogBreed dogBreed=new DogBreed();
+                dogBreed.setName(breed);
+                dogBreedRepository.save(dogBreed);
+                DogPicture dogPicture=  new DogPicture();
+                dogPicture.setFavoriteCount(0);
+                dogPicture.setUrl(line);
+                dogPicture.setBreed(dogBreed);
+                dogPictureRepository.save(dogPicture);
+
+
             }
         }
     }
